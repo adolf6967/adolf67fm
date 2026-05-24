@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>67 FM — радио для своих</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Comic Sans MS", "Arial", sans-serif;
+      background:
+        repeating-linear-gradient(
+          45deg,
+          #ff00cc,
+          #ff00cc 20px,
+          #00ffff 20px,
+          #00ffff 40px
+        );
+      color: #ffff00;
+      text-align: center;
+      overflow-x: hidden;
+    }
+
+    .marquee {
+      background: #ff0000;
+      color: #ffffff;
+      font-size: 24px;
+      font-weight: bold;
+      padding: 10px;
+      border-bottom: 6px dashed #ffff00;
+      text-shadow: 3px 3px #000000;
+    }
+
+    .wrap {
+      width: min(92vw, 720px);
+      margin: 40px auto;
+      padding: 25px;
+      background: #0000ff;
+      border: 10px ridge #ffff00;
+      box-shadow: 15px 15px 0 #000000;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(44px, 10vw, 96px);
+      color: #00ff00;
+      text-shadow:
+        4px 4px #ff0000,
+        8px 8px #000000;
+      animation: blink 0.8s infinite alternate;
+    }
+
+    .subtitle {
+      font-size: 24px;
+      color: #ffffff;
+      text-shadow: 2px 2px #000000;
+      margin: 15px 0 25px;
+    }
+
+    .radio-box {
+      background: #ffff00;
+      color: #000000;
+      padding: 25px;
+      border: 8px double #ff0000;
+      margin-top: 20px;
+    }
+
+    .big-button {
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      border: 10px solid #000000;
+      background: radial-gradient(circle, #00ff00, #009900);
+      color: #000000;
+      font-size: 34px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 15px 0 #003300;
+      font-family: "Comic Sans MS", "Arial", sans-serif;
+    }
+
+    .big-button:active {
+      transform: translateY(10px);
+      box-shadow: 0 5px 0 #003300;
+    }
+
+    .big-button.playing {
+      background: radial-gradient(circle, #ff0000, #990000);
+      color: #ffffff;
+      box-shadow: 0 15px 0 #330000;
+    }
+
+    .status {
+      margin-top: 20px;
+      font-size: 26px;
+      font-weight: bold;
+      color: #ff0000;
+      text-shadow: 2px 2px #ffffff;
+    }
+
+    .volume-block {
+      margin-top: 25px;
+      padding: 15px;
+      background: #00ffff;
+      border: 5px dotted #000000;
+    }
+
+    label {
+      display: block;
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    input[type="range"] {
+      width: 90%;
+      accent-color: #ff0000;
+    }
+
+    .footer {
+      margin-top: 25px;
+      font-size: 18px;
+      color: #ffffff;
+      text-shadow: 2px 2px #000000;
+    }
+
+    .password-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      display: grid;
+      place-items: center;
+      background:
+        repeating-linear-gradient(
+          -45deg,
+          #000000,
+          #000000 20px,
+          #330033 20px,
+          #330033 40px
+        );
+      padding: 20px;
+    }
+
+    .password-card {
+      width: min(92vw, 460px);
+      background: #ffff00;
+      color: #000000;
+      border: 10px groove #ff0000;
+      padding: 25px;
+      box-shadow: 15px 15px 0 #ff00ff;
+    }
+
+    .password-card h2 {
+      margin-top: 0;
+      font-size: 34px;
+      color: #ff0000;
+      text-shadow: 2px 2px #ffffff;
+    }
+
+    .password-card input {
+      width: 100%;
+      padding: 16px;
+      font-size: 22px;
+      border: 5px solid #000000;
+      margin: 12px 0;
+      text-align: center;
+      font-family: "Comic Sans MS", "Arial", sans-serif;
+    }
+
+    .password-card button {
+      width: 100%;
+      padding: 16px;
+      font-size: 24px;
+      font-weight: bold;
+      background: #00ff00;
+      border: 5px solid #000000;
+      cursor: pointer;
+      font-family: "Comic Sans MS", "Arial", sans-serif;
+    }
+
+    .error {
+      color: #ff0000;
+      font-size: 18px;
+      font-weight: bold;
+      min-height: 24px;
+    }
+
+    @keyframes blink {
+      from {
+        color: #00ff00;
+      }
+      to {
+        color: #ffff00;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="passwordScreen" class="password-screen">
+    <div class="password-card">
+      <h2>🔒 ВХОД ТОЛЬКО ДЛЯ СВОИХ</h2>
+      <p>Введите пароль, иначе радио не будет.</p>
+
+      <input
+        id="passwordInput"
+        type="password"
+        placeholder="пароль сюда"
+        autocomplete="off"
+      />
+
+      <button id="loginButton">ВОЙТИ НА РАДИО</button>
+      <div id="passwordError" class="error"></div>
+    </div>
+  </div>
+
+  <div class="marquee">
+    <marquee scrollamount="12">🔥 67 FM 🔥 РАДИО ДЛЯ СВОИХ 🔥 НЕ ДЛЯ СЛУЧАЙНЫХ ЛЮДЕЙ 🔥</marquee>
+  </div>
+
+  <main class="wrap">
+    <h1>67 FM</h1>
+    <div class="subtitle">самое секретное интернет радио района</div>
+
+    <div class="radio-box">
+      <button id="playButton" class="big-button">▶ PLAY</button>
+
+      <div id="status" class="status">РАДИО МОЛЧИТ</div>
+
+      <div class="volume-block">
+        <label for="volume">ГРОМКОСТЬ: <span id="volumeValue">80</span>%</label>
+        <input id="volume" type="range" min="0" max="100" value="80" />
+      </div>
+    </div>
+
+    <div class="footer">
+      Работает на честном слове, AzuraCast и любви к колхозному дизайну.
+      <br />
+      Поток: radio.67fm.ru
+    </div>
+  </main>
+
+  <audio id="radio" preload="none">
+    <source src="https://radio.67fm.ru/listen/radio67/radio.mp3" type="audio/mpeg" />
+    Ваш браузер не поддерживает аудио.
+  </audio>
+
+  <script>
+    // ВНИМАНИЕ:
+    // Это НЕ настоящая защита. Пароль можно найти в исходном коде страницы.
+    // Для сайта на GitHub Pages это максимум "защита от случайных гостей".
+    const SITE_PASSWORD = "67fm";
+
+    const passwordScreen = document.getElementById("passwordScreen");
+    const passwordInput = document.getElementById("passwordInput");
+    const loginButton = document.getElementById("loginButton");
+    const passwordError = document.getElementById("passwordError");
+
+    const radio = document.getElementById("radio");
+    const playButton = document.getElementById("playButton");
+    const statusText = document.getElementById("status");
+    const volume = document.getElementById("volume");
+    const volumeValue = document.getElementById("volumeValue");
+
+    let isPlaying = false;
+
+    function unlockSite() {
+      sessionStorage.setItem("radioAccess", "ok");
+      passwordScreen.style.display = "none";
+    }
+
+    function checkPassword() {
+      const enteredPassword = passwordInput.value.trim();
+
+      if (enteredPassword === SITE_PASSWORD) {
+        unlockSite();
+      } else {
+        passwordError.textContent = "НЕВЕРНЫЙ ПАРОЛЬ, ТОВАРИЩ";
+        passwordInput.value = "";
+        passwordInput.focus();
+      }
+    }
+
+    if (sessionStorage.getItem("radioAccess") === "ok") {
+      passwordScreen.style.display = "none";
+    }
+
+    loginButton.addEventListener("click", checkPassword);
+
+    passwordInput.addEventListener("keydown", function (event) {
+      if (event.key === "Enter") {
+        checkPassword();
+      }
+    });
+
+    radio.volume = 0.8;
+
+    playButton.addEventListener("click", async function () {
+      try {
+        if (!isPlaying) {
+          await radio.play();
+          isPlaying = true;
+          playButton.textContent = "⏸ PAUSE";
+          playButton.classList.add("playing");
+          statusText.textContent = "РАДИО ОРЁТ";
+        } else {
+          radio.pause();
+          isPlaying = false;
+          playButton.textContent = "▶ PLAY";
+          playButton.classList.remove("playing");
+          statusText.textContent = "РАДИО МОЛЧИТ";
+        }
+      } catch (error) {
+        statusText.textContent = "НЕ ЗАПУСТИЛОСЬ, ЖМИ ЕЩЁ";
+        console.error(error);
+      }
+    });
+
+    volume.addEventListener("input", function () {
+      const value = Number(volume.value);
+      radio.volume = value / 100;
+      volumeValue.textContent = value;
+    });
+
+    radio.addEventListener("error", function () {
+      statusText.textContent = "ПОТОК УПАЛ ИЛИ НЕ ДОСТУПЕН";
+    });
+  </script>
+</body>
+</html>

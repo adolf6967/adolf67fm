@@ -3,202 +3,230 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>67 FM — радио для своих</title>
+  <title>67 FM</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
       min-height: 100vh;
       font-family: "Comic Sans MS", "Arial", sans-serif;
-      background:
-        repeating-linear-gradient(
-          45deg,
-          #ff00cc,
-          #ff00cc 20px,
-          #00ffff 20px,
-          #00ffff 40px
-        );
-      color: #ffff00;
+      background: 
+        radial-gradient(circle at center, #1a0033 0%, #000000 70%),
+        repeating-linear-gradient(45deg, #0a0000, #0a0000 15px, #330000 15px, #330000 30px);
+      color: #ff00ff;
       text-align: center;
       overflow-x: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(0,255,255,0.05) 40px, rgba(0,255,255,0.05) 80px);
+      pointer-events: none;
+      z-index: 1;
+      animation: scanline 6s linear infinite;
+    }
+
+    @keyframes scanline {
+      0% { transform: translateY(-100%); }
+      100% { transform: translateY(100%); }
     }
 
     .marquee {
-      background: #ff0000;
-      color: #ffffff;
-      font-size: 24px;
+      background: linear-gradient(90deg, #ff0000, #8b0000);
+      color: #ffff00;
+      font-size: 26px;
       font-weight: bold;
-      padding: 10px;
-      border-bottom: 6px dashed #ffff00;
-      text-shadow: 3px 3px #000000;
+      padding: 12px;
+      border-bottom: 8px dashed #00ffff;
+      text-shadow: 4px 4px #000000;
+      position: relative;
+      z-index: 2;
+      text-transform: uppercase;
     }
 
     .wrap {
-      width: min(92vw, 720px);
-      margin: 40px auto;
-      padding: 25px;
-      background: #0000ff;
-      border: 10px ridge #ffff00;
-      box-shadow: 15px 15px 0 #000000;
+      width: min(92vw, 760px);
+      margin: 30px auto;
+      padding: 30px;
+      background: rgba(10, 0, 20, 0.95);
+      border: 12px ridge #ff00ff;
+      box-shadow: 0 0 30px #ff00ff, 20px 20px 0 #000000;
+      position: relative;
+      z-index: 2;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 25px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      width: 140px;
+      height: 140px;
+      border: 10px solid #ffff00;
+      border-radius: 50%;
+      box-shadow: 0 0 30px #ff00ff, 0 0 60px #ffff00;
+      object-fit: cover;
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(44px, 10vw, 96px);
+      font-size: clamp(62px, 14vw, 120px);
       color: #00ff00;
-      text-shadow:
-        4px 4px #ff0000,
-        8px 8px #000000;
-      animation: blink 0.8s infinite alternate;
+      text-shadow: 
+        6px 6px #ff0000,
+        10px 10px #000000,
+        0 0 25px #ffff00;
+      animation: glitch 0.5s infinite alternate;
+      letter-spacing: -6px;
+    }
+
+    @keyframes glitch {
+      from { transform: translate(3px, 2px); }
+      to { transform: translate(-3px, -2px); }
     }
 
     .subtitle {
-      font-size: 24px;
-      color: #ffffff;
-      text-shadow: 2px 2px #000000;
-      margin: 15px 0 25px;
+      font-size: 22px;
+      color: #00ffff;
+      text-shadow: 3px 3px #ff0000;
+      margin-bottom: 30px;
+      font-weight: bold;
     }
 
     .radio-box {
-      background: #ffff00;
-      color: #000000;
-      padding: 25px;
-      border: 8px double #ff0000;
+      background: #110022;
+      color: #ffff00;
+      padding: 35px;
+      border: 10px double #ff00ff;
       margin-top: 20px;
+      box-shadow: inset 0 0 30px #000000;
     }
 
     .big-button {
-      width: 220px;
-      height: 220px;
+      width: 240px;
+      height: 240px;
       border-radius: 50%;
-      border: 10px solid #000000;
-      background: radial-gradient(circle, #00ff00, #009900);
-      color: #000000;
-      font-size: 34px;
+      border: 14px solid #ffff00;
+      background: radial-gradient(circle, #ff00ff, #8b008b);
+      color: #ffffff;
+      font-size: 38px;
       font-weight: bold;
       cursor: pointer;
-      box-shadow: 0 15px 0 #003300;
-      font-family: "Comic Sans MS", "Arial", sans-serif;
+      box-shadow: 0 20px 0 #330033, 0 0 40px #ff00ff;
+      transition: all 0.1s;
     }
 
-    .big-button:active {
-      transform: translateY(10px);
-      box-shadow: 0 5px 0 #003300;
-    }
-
+    .big-button:active { transform: translateY(12px); box-shadow: 0 8px 0 #330033; }
     .big-button.playing {
-      background: radial-gradient(circle, #ff0000, #990000);
-      color: #ffffff;
-      box-shadow: 0 15px 0 #330000;
+      background: radial-gradient(circle, #ff0000, #8b0000);
+      box-shadow: 0 20px 0 #330000, 0 0 50px #ffff00;
     }
 
     .status {
-      margin-top: 20px;
-      font-size: 26px;
+      margin: 25px 0;
+      font-size: 32px;
       font-weight: bold;
       color: #ff0000;
-      text-shadow: 2px 2px #ffffff;
+      text-shadow: 0 0 15px #ffff00, 3px 3px #000000;
     }
+
+    .visualizer-container {
+      margin: 25px auto;
+      padding: 15px;
+      background: #000000;
+      border: 6px solid #00ffff;
+      box-shadow: 0 0 25px #ff00ff;
+      max-width: 520px;
+    }
+
+    canvas { width: 100%; height: 160px; background: #000; }
 
     .volume-block {
       margin-top: 25px;
-      padding: 15px;
-      background: #00ffff;
-      border: 5px dotted #000000;
+      padding: 18px;
+      background: #220033;
+      border: 6px dotted #00ff00;
     }
 
     label {
       display: block;
-      font-size: 22px;
+      font-size: 24px;
       font-weight: bold;
       margin-bottom: 12px;
+      color: #ffff00;
     }
 
     input[type="range"] {
       width: 90%;
-      accent-color: #ff0000;
+      accent-color: #ff00ff;
+      height: 12px;
     }
 
     .footer {
-      margin-top: 25px;
+      margin-top: 30px;
       font-size: 18px;
-      color: #ffffff;
+      color: #00ffff;
       text-shadow: 2px 2px #000000;
     }
 
     .password-screen {
       position: fixed;
       inset: 0;
-      z-index: 999;
+      z-index: 9999;
       display: grid;
       place-items: center;
-      background:
-        repeating-linear-gradient(
-          -45deg,
-          #000000,
-          #000000 20px,
-          #330033 20px,
-          #330033 40px
-        );
-      padding: 20px;
+      background: repeating-linear-gradient(-35deg, #000000, #000000 25px, #1a001a 25px, #1a001a 50px);
     }
 
     .password-card {
-      width: min(92vw, 460px);
-      background: #ffff00;
-      color: #000000;
-      border: 10px groove #ff0000;
-      padding: 25px;
-      box-shadow: 15px 15px 0 #ff00ff;
+      width: min(92vw, 480px);
+      background: #110022;
+      color: #ffff00;
+      border: 12px ridge #ff00ff;
+      padding: 35px;
+      box-shadow: 0 0 40px #ff0000, 25px 25px 0 #000000;
     }
 
     .password-card h2 {
       margin-top: 0;
-      font-size: 34px;
+      font-size: 38px;
       color: #ff0000;
-      text-shadow: 2px 2px #ffffff;
+      text-shadow: 4px 4px #ffff00;
     }
 
     .password-card input {
       width: 100%;
-      padding: 16px;
-      font-size: 22px;
-      border: 5px solid #000000;
-      margin: 12px 0;
+      padding: 18px;
+      font-size: 26px;
+      border: 6px solid #ff00ff;
+      margin: 15px 0;
       text-align: center;
-      font-family: "Comic Sans MS", "Arial", sans-serif;
+      background: #000;
+      color: #00ff00;
     }
 
     .password-card button {
       width: 100%;
-      padding: 16px;
-      font-size: 24px;
+      padding: 18px;
+      font-size: 26px;
       font-weight: bold;
-      background: #00ff00;
-      border: 5px solid #000000;
+      background: linear-gradient(#ff00ff, #8b008b);
+      border: 6px solid #ffff00;
+      color: white;
       cursor: pointer;
-      font-family: "Comic Sans MS", "Arial", sans-serif;
     }
 
-    .error {
-      color: #ff0000;
-      font-size: 18px;
-      font-weight: bold;
-      min-height: 24px;
-    }
-
-    @keyframes blink {
-      from {
-        color: #00ff00;
-      }
-      to {
-        color: #ffff00;
-      }
-    }
+    .error { color: #ffff00; font-size: 20px; font-weight: bold; min-height: 30px; }
   </style>
 </head>
 
@@ -206,32 +234,30 @@
   <div id="passwordScreen" class="password-screen">
     <div class="password-card">
       <h2>🔒 ВХОД ТОЛЬКО ДЛЯ СВОИХ</h2>
-      <p>Введите пароль, иначе радио не будет.</p>
-
-      <input
-        id="passwordInput"
-        type="password"
-        placeholder="пароль сюда"
-        autocomplete="off"
-      />
-
-      <button id="loginButton">ВОЙТИ НА РАДИО</button>
+      <p>Введите пароль</p>
+      <input id="passwordInput" type="password" placeholder="пароль" autocomplete="off" />
+      <button id="loginButton">ЗАЙТИ НА 67 FM</button>
       <div id="passwordError" class="error"></div>
     </div>
   </div>
 
   <div class="marquee">
-    <marquee scrollamount="12">🔥 67 FM 🔥 РАДИО ДЛЯ СВОИХ 🔥 НЕ ДЛЯ СЛУЧАЙНЫХ ЛЮДЕЙ 🔥</marquee>
+    <marquee scrollamount="12">67 FM • 67 FM • 67 FM</marquee>
   </div>
 
   <main class="wrap">
-    <h1>67 FM</h1>
-    <div class="subtitle">самое секретное интернет радио района</div>
+    <div class="header">
+      <img src="https://files.oaiusercontent.com/file-0vN8vN8vN8vN8vN8vN8vN8vN?se=2026-05-25T00%3A00%3A00Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D3628800%2C%20immutable&rscd=attachment%3B%20filename%3D67fm-tiki-logo.png" alt="67 FM Logo" class="logo" id="logo">
+      <h1>67 FM</h1>
+    </div>
 
     <div class="radio-box">
-      <button id="playButton" class="big-button">▶ PLAY</button>
-
+      <button id="playButton" class="big-button">▶<br>PLAY</button>
       <div id="status" class="status">РАДИО МОЛЧИТ</div>
+
+      <div class="visualizer-container">
+        <canvas id="visualizer" width="500" height="160"></canvas>
+      </div>
 
       <div class="volume-block">
         <label for="volume">ГРОМКОСТЬ: <span id="volumeValue">80</span>%</label>
@@ -240,22 +266,16 @@
     </div>
 
     <div class="footer">
-      Работает на честном слове, AzuraCast и любви к колхозному дизайну.
-      <br />
       Поток: radio.67fm.ru
     </div>
   </main>
 
   <audio id="radio" preload="none">
     <source src="https://radio.67fm.ru/listen/radio67/radio.mp3" type="audio/mpeg" />
-    Ваш браузер не поддерживает аудио.
   </audio>
 
   <script>
-    // ВНИМАНИЕ:
-    // Это НЕ настоящая защита. Пароль можно найти в исходном коде страницы.
-    // Для сайта на GitHub Pages это максимум "защита от случайных гостей".
-    const SITE_PASSWORD = "67fm";
+    const VALID_PASSWORDS = ["67", "1488", "228", "67fm"];
 
     const passwordScreen = document.getElementById("passwordScreen");
     const passwordInput = document.getElementById("passwordInput");
@@ -267,8 +287,43 @@
     const statusText = document.getElementById("status");
     const volume = document.getElementById("volume");
     const volumeValue = document.getElementById("volumeValue");
+    const canvas = document.getElementById("visualizer");
+    const ctx = canvas.getContext("2d");
 
     let isPlaying = false;
+    let audioContext, analyser, source, animationFrame;
+
+    function initAudioVisualizer() {
+      if (audioContext) return;
+      audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      analyser = audioContext.createAnalyser();
+      analyser.fftSize = 128;
+      source = audioContext.createMediaElementSource(radio);
+      source.connect(analyser);
+      analyser.connect(audioContext.destination);
+    }
+
+    function drawVisualizer() {
+      if (!analyser) return requestAnimationFrame(drawVisualizer);
+      
+      const bufferLength = analyser.frequencyBinCount;
+      const dataArray = new Uint8Array(bufferLength);
+      analyser.getByteFrequencyData(dataArray);
+
+      ctx.fillStyle = "#000000";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const barWidth = (canvas.width / bufferLength) * 1.8;
+      let x = 0;
+
+      for (let i = 0; i < bufferLength; i++) {
+        const barHeight = (dataArray[i] / 255) * canvas.height * 0.92;
+        ctx.fillStyle = `hsl(${i * 2.8 + 290}, 100%, 70%)`;
+        ctx.fillRect(x, canvas.height - barHeight, barWidth - 4, barHeight);
+        x += barWidth + 3;
+      }
+      animationFrame = requestAnimationFrame(drawVisualizer);
+    }
 
     function unlockSite() {
       sessionStorage.setItem("radioAccess", "ok");
@@ -276,61 +331,51 @@
     }
 
     function checkPassword() {
-      const enteredPassword = passwordInput.value.trim();
-
-      if (enteredPassword === SITE_PASSWORD) {
+      if (VALID_PASSWORDS.includes(passwordInput.value.trim())) {
         unlockSite();
       } else {
-        passwordError.textContent = "НЕВЕРНЫЙ ПАРОЛЬ, ТОВАРИЩ";
+        passwordError.textContent = "НЕВЕРНЫЙ ПАРОЛЬ";
         passwordInput.value = "";
-        passwordInput.focus();
       }
     }
 
-    if (sessionStorage.getItem("radioAccess") === "ok") {
-      passwordScreen.style.display = "none";
-    }
+    if (sessionStorage.getItem("radioAccess") === "ok") passwordScreen.style.display = "none";
 
     loginButton.addEventListener("click", checkPassword);
-
-    passwordInput.addEventListener("keydown", function (event) {
-      if (event.key === "Enter") {
-        checkPassword();
-      }
-    });
+    passwordInput.addEventListener("keydown", e => { if (e.key === "Enter") checkPassword(); });
 
     radio.volume = 0.8;
 
-    playButton.addEventListener("click", async function () {
-      try {
-        if (!isPlaying) {
-          await radio.play();
-          isPlaying = true;
-          playButton.textContent = "⏸ PAUSE";
-          playButton.classList.add("playing");
-          statusText.textContent = "РАДИО ОРЁТ";
-        } else {
-          radio.pause();
-          isPlaying = false;
-          playButton.textContent = "▶ PLAY";
-          playButton.classList.remove("playing");
-          statusText.textContent = "РАДИО МОЛЧИТ";
-        }
-      } catch (error) {
-        statusText.textContent = "НЕ ЗАПУСТИЛОСЬ, ЖМИ ЕЩЁ";
-        console.error(error);
+    playButton.addEventListener("click", async () => {
+      if (!isPlaying) {
+        if (!audioContext) initAudioVisualizer();
+        await radio.play().catch(() => {});
+        isPlaying = true;
+        playButton.innerHTML = "⏸<br>PAUSE";
+        playButton.classList.add("playing");
+        statusText.textContent = "РАДИО ИГРАЕТ";
+        statusText.style.color = "#00ff00";
+        drawVisualizer();
+      } else {
+        radio.pause();
+        isPlaying = false;
+        playButton.innerHTML = "▶<br>PLAY";
+        playButton.classList.remove("playing");
+        statusText.textContent = "РАДИО МОЛЧИТ";
+        statusText.style.color = "#ff0000";
       }
     });
 
-    volume.addEventListener("input", function () {
-      const value = Number(volume.value);
-      radio.volume = value / 100;
-      volumeValue.textContent = value;
+    volume.addEventListener("input", () => {
+      const val = Number(volume.value);
+      radio.volume = val / 100;
+      volumeValue.textContent = val;
     });
 
-    radio.addEventListener("error", function () {
-      statusText.textContent = "ПОТОК УПАЛ ИЛИ НЕ ДОСТУПЕН";
-    });
+    setTimeout(() => {
+      initAudioVisualizer();
+      drawVisualizer();
+    }, 500);
   </script>
 </body>
 </html>
